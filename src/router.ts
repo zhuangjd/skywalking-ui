@@ -64,7 +64,11 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  const token = window.localStorage.getItem('skywalking-authority');
+  let token = window.localStorage.getItem('skywalking-authority');
+  if (Vue.prototype.noLoginMode === 'admin' && (token === null || token === 'guest')) {
+      window.localStorage.setItem('skywalking-authority', 'admin');
+      token = window.localStorage.getItem('skywalking-authority');
+  }
   if (w.axiosCancel.length !== 0) {
     for (const func of  w.axiosCancel) {
       setTimeout(func(), 0);

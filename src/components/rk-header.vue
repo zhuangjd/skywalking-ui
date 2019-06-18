@@ -21,7 +21,7 @@
       <svg class="svg-logo icon" style="margin-right:35px;margin-top:-5px">
         <use xlink:href="#logo-sw"></use>
       </svg>
-      <span class="grey rocketbot">Rocketbot</span>
+      <span class="grey rocketbot">应&nbsp;用&nbsp;性&nbsp;能&nbsp;监&nbsp;控</span>
       <router-link class="nav-link mr-20" to="/" exact>
         <svg class="icon sm vm">
           <use xlink:href="#chart"></use>
@@ -139,7 +139,7 @@ export default class Header extends Vue {
     height: 22px;
   }
   .rocketbot{
-    padding-top: 27px;
+    padding-top: 33px;
     position: absolute;
     font-size: 11px;
   }

@@ -20,7 +20,7 @@
   <div class="rk-login-l">
     <div class="rk-login-form-wrapper">
       <div class="rk-login-form">
-          <h1 class="mb-10 title"><span class="grey">{{$t('hello')}}, </span>SkyWalking Rockbot UI</h1>
+          <h1 class="mb-10 title"><span class="grey">{{$t('hello')}}, </span>Rexen SkyWalking UI</h1>
           <div class="grey dscp">{{$t('helloMessage')}}</div>
           <div class="sm b mb-5">{{$t('username')}}</div>
           <input @keyup.enter="login" @input="error = false;" class="rk-login-input mb-15" :class="{'rk-login-red':error}" v-model="accountInfo.userName" type="text">
@@ -154,7 +154,7 @@ export default class Login extends Vue {
   position: relative;
   height: 100%;
   width: 61.8%;
-  background-color: #21272b;
+  background-color: #003c6f;/*21272b*/
   overflow: hidden;
 }
 @keyframes spin {
