@@ -162,9 +162,22 @@ export default class TraceTool extends Vue {
     this.GET_TRACELIST();
   }
   private mounted() {
-    this.time = [this.rocketbotGlobal.durationRow.start, this.rocketbotGlobal.durationRow.end];
-    this.getTraceList();
+      this.time = [this.rocketbotGlobal.durationRow.start, this.rocketbotGlobal.durationRow.end];
+      this.getTraceList();
   }
+    private beforeUpdate() { /*限制只查询指定的服务，参数通过URL传输过来*/
+        const nodeNameStr = this.$route.query.nodeName;
+        if (nodeNameStr) {
+            this.rocketTrace.services.filter((i: any) => {
+                if (i.label.indexOf(nodeNameStr) !== -1) {
+                    this.chooseService(i);
+                }
+            });
+        }
+    }
+    private update() {
+        this.getTraceList();
+    }
 }
 </script>
 

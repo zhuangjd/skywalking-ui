@@ -61,6 +61,16 @@ export default class TopologyServices extends Vue {
   private created() {
     this.fetchData();
   }
+    private updated() { /*限制只显示指定的服务，参数通过URL传输过来*/
+        const nodeNameStr = this.$route.query.nodeName;
+        if (nodeNameStr) {
+            this.services.filter((i: any) => {
+                if (i.label.indexOf(nodeNameStr) !== -1) {
+                    this.handleChange(i);
+                }
+            });
+        }
+    }
 }
 </script>
 <style lang="scss">

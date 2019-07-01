@@ -80,6 +80,7 @@ export default class ToolNav extends Vue {
                   this.SET_CURRENT_COMPS(index);
               }
               index ++;
+              // this.$router.push({ name: 'Topology', query: { nodeName: this.$route.query.nodeName }});
           });
       }
   }

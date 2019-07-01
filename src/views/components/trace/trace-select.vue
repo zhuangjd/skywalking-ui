@@ -57,6 +57,12 @@ export default class TraceSelect extends Vue {
     this.$emit('input', i);
     this.visible = false;
   }
+    public beforeUpdate() { /*限制只显示指定的服务，参数通过URL传输过来*/
+        const nodeNameStr = this.$route.query.nodeName;
+        if (nodeNameStr) {
+            this.visible = false;
+        }
+    }
 }
 </script>
 
