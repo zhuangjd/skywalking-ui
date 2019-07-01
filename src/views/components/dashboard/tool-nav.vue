@@ -72,6 +72,17 @@ export default class ToolNav extends Vue {
     this.handleHide();
     this.template = 'nouse';
   }
+  private mounted() { /*限制默认显示Service，参数通过URL传输过来*/
+      let index = 0;
+      if (this.$route.query.nodeName) {
+          this.rocketComps.tree[this.rocketComps.group].children.filter((i: any) => {
+              if (i.name.indexOf('Service') !== -1) {
+                  this.SET_CURRENT_COMPS(index);
+              }
+              index ++;
+          });
+      }
+  }
 }
 </script>
 

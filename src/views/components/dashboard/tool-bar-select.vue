@@ -67,7 +67,7 @@ export default class ToolBarSelect extends Vue {
   public updated() { /*限制只显示指定的服务和实例，参数通过URL传输过来*/
       if (this.$route.query.nodeName) {
           this.data.filter((i: any) => {
-              if (i.label.toUpperCase().indexOf(this.$route.query.nodeName) !== -1) {
+              if (i.label.indexOf(this.$route.query.nodeName) !== -1) {
                   this.$emit('onChoose', i);
                   this.visible = false;
               }
