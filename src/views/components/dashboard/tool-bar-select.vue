@@ -53,8 +53,6 @@ export default class ToolBarSelect extends Vue {
   @Prop() public icon!: string;
   public search: string = '';
   public visible: boolean = false;
-  public isAlert: boolean = true;
-
   get filterData() {
     return this.data.filter((i: any) => i.label.toUpperCase().indexOf(this.search.toUpperCase()) !== -1);
   }
@@ -65,21 +63,16 @@ export default class ToolBarSelect extends Vue {
     this.$emit('onChoose', i);
     this.visible = false;
   }
-  public updated() { /*限制只显示指定的服务和实例，参数通过URL传输过来*/
-      if (this.$route.query.nodeName) {
-          this.data.filter((i: any) => {
-              if (i.label.indexOf(this.$route.query.nodeName) !== -1) {
-                  this.$emit('onChoose', i);
-                  this.visible = false;
-              } else {
-                  if (i.label.indexOf('-pid:') !== -1 && this.isAlert) {
-                      alert('当前未采集到节点【' + this.$route.query.nodeName + '】的数据，请检查监控代理配置并刷新当前服务！');
-                      this.isAlert = false;
-                  }
-              }
-          });
-      }
-  }
+    public updated() { /*限制只显示指定的服务和实例，参数通过URL传输过来*/
+        if (this.$route.query.nodeName) {
+            this.data.filter((i: any) => {
+                if (i.label.indexOf(this.$route.query.nodeName) !== -1) {
+                    this.$emit('onChoose', i);
+                    this.visible = false;
+                }
+            });
+        }
+    }
 }
 </script>
 

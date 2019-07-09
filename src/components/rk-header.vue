@@ -93,12 +93,10 @@ export default class Header extends Vue {
   private nodeNameStr: any = null;
   private handleReload() {
     const gap = this.duration.end.getTime() - this.duration.start.getTime();
-    const w = window as any;
-    const utc = w.localStorage.getItem('utc');
     const utcCopy: any = -(new Date().getTimezoneOffset() / 60);
     this.$emit('reloadFooter', [
-      new Date(new Date().getTime() - gap + (utc - utcCopy) * 3600000),
-      new Date(new Date().getTime() + (utc - utcCopy) * 3600000),
+      new Date(new Date().getTime() - gap),
+      new Date(),
     ]);
   }
   private handleAuto() {
@@ -121,7 +119,7 @@ export default class Header extends Vue {
     this.$router.push('/login');
   }
   private beforeMount() {
-    this.nodeNameStr = this.$route.query.nodeName;
+     this.nodeNameStr = this.$route.query.nodeName;
   }
 }
 </script>
@@ -181,7 +179,7 @@ export default class Header extends Vue {
   padding: 3px 0;
   color: #333844;
   width: 100px;
-  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.15);
 }
 .rk-header-user-menu-i{
   padding: 6px 10px;

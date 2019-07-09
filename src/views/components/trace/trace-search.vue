@@ -65,7 +65,8 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
 import { Action, Getter, State } from 'vuex-class';
-import { Trace, DurationTime, Option } from '../../../store/interfaces';
+import { Trace } from '@/types/trace';
+import { DurationTime, Option } from '@/types/global';
 import TraceSelect from './trace-select.vue';
 
 @Component({components: {TraceSelect}})
@@ -162,8 +163,8 @@ export default class TraceTool extends Vue {
     this.GET_TRACELIST();
   }
   private mounted() {
-      this.time = [this.rocketbotGlobal.durationRow.start, this.rocketbotGlobal.durationRow.end];
-      this.getTraceList();
+    this.time = [this.rocketbotGlobal.durationRow.start, this.rocketbotGlobal.durationRow.end];
+    this.getTraceList();
   }
     private beforeUpdate() { /*限制只查询指定的服务，参数通过URL传输过来*/
         const nodeNameStr = this.$route.query.nodeName;

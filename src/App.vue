@@ -20,7 +20,6 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-Vue.prototype.noLoginMode = 'admin'; // rexen无密码登录模式，也可环境变量设置process.env.VUE_APP_NOLOGINMODE
 
 @Component
 export default class App extends Vue {

@@ -12,6 +12,7 @@ const m = {
   password: '密码',
   title: '标题',
   width: '宽度',
+  height: '高度',
   login: '登录',
   signout: '登出',
   dashboard: '仪表盘',
@@ -92,6 +93,7 @@ const m = {
   weekCutTip: '最近1周',
   monthCutTip: '最近1月',
   serverZone: '服务器时区',
+  percentResponse: '百分比响应',
 };
 
 export default m;

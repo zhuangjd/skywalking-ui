@@ -12,6 +12,7 @@ const m = {
   password: 'Password',
   title: 'Title',
   width: 'Width',
+  height: 'Height',
   login: 'Login Now',
   signout: 'Sign Out',
   dashboard: 'Dashboard',
@@ -92,6 +93,7 @@ const m = {
   weekCutTip: 'Last 1 week',
   monthCutTip: 'Last 1 month',
   serverZone: 'Server Zone',
+  percentResponse: 'Percent Response',
 };
 
 export default m;
