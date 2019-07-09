@@ -60,6 +60,7 @@ export default class ToolNav extends Vue {
   private name: string = '';
   private template: string = 'nouse';
   private show: boolean = false;
+  private isAlert: boolean = true;
   get type() {
     return this.rocketComps.tree[this.rocketComps.group].type;
   }
@@ -86,15 +87,14 @@ export default class ToolNav extends Vue {
     }
     private updated() { /*限制默认显示Database，参数通过URL传输过来*/
         let index = 0;
-        let isAlert = true;
         if (this.$route.query.nodeName) {
             this.rocketComps.tree[this.rocketComps.group].children.filter((i: any) => {
                 if (/(Service)|(Endpoint)|(Instance)/.test(i.name)) {
                     return;
                 }
-                if (i.name.indexOf('Database') !== -1 && isAlert) {
+                if (i.name.indexOf('Database') !== -1 && this.isAlert) {
                     this.SET_CURRENT_COMPS(index);
-                    isAlert = false;
+                    this.isAlert = false;
                 }
                 index ++;
             });
