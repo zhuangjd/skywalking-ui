@@ -60,7 +60,7 @@ export default class ToolBarSelect extends Vue {
     this.$emit('onChoose', i);
     this.visible = false;
   }
-    public beforeUpdate() { /*限制只显示指定的服务，参数通过URL传输过来*/
+  public beforeUpdate() { /*限制只显示指定的服务，参数通过URL传输过来*/
         const nodeNameStr = this.$route.query.nodeName;
         if (nodeNameStr) {
             this.data.filter((i: any) => {
@@ -69,7 +69,7 @@ export default class ToolBarSelect extends Vue {
                 }
             });
         }
-    }
+  }
 }
 </script>
 

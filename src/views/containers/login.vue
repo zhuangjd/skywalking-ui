@@ -154,7 +154,7 @@ export default class Login extends Vue {
   position: relative;
   height: 100%;
   width: 61.8%;
-  background-color:  #003c6f;/*21272b*/
+  background-color: #21272b;
   overflow: hidden;
 }
 @keyframes spin {

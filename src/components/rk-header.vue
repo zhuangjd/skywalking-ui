@@ -22,19 +22,19 @@
         <use xlink:href="#logo-sw"></use>
       </svg>
       <span class="grey rocketbot">应&nbsp;用&nbsp;性&nbsp;能&nbsp;监&nbsp;控</span>
-      <router-link class="nav-link mr-20" :to="{path:'/', query:{nodeName: nodeNameStr}}" exact>
+        <router-link class="nav-link mr-20" :to="{path:'/', query:{nodeName: nodeNameStr}}" exact>
         <svg class="icon sm vm">
           <use xlink:href="#chart"></use>
         </svg>
         <span class="vm hide-xs ml-5">{{this.$t('dashboard')}}</span>
       </router-link>
-      <router-link class="nav-link mr-20" :to="{path:'topology', query:{nodeName: nodeNameStr}}">
+        <router-link class="nav-link mr-20" :to="{path:'topology', query:{nodeName: nodeNameStr}}">
         <svg class="icon sm vm">
           <use xlink:href="#issues"></use>
         </svg>
         <span class="vm hide-xs ml-5">{{this.$t('topology')}}</span>
       </router-link>
-      <router-link class="nav-link mr-20" :to="{path:'trace', query:{nodeName: nodeNameStr}}">
+        <router-link class="nav-link mr-20" :to="{path:'trace', query:{nodeName: nodeNameStr}}">
         <svg class="icon sm vm">
           <use xlink:href="#merge"></use>
         </svg>

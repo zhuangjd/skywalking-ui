@@ -166,7 +166,7 @@ export default class TraceTool extends Vue {
     this.time = [this.rocketbotGlobal.durationRow.start, this.rocketbotGlobal.durationRow.end];
     this.getTraceList();
   }
-    private beforeUpdate() { /*限制只查询指定的服务，参数通过URL传输过来*/
+  private beforeUpdate() { /*限制只查询指定的服务，参数通过URL传输过来*/
         const nodeNameStr = this.$route.query.nodeName;
         if (nodeNameStr) {
             this.rocketTrace.services.filter((i: any) => {
@@ -175,10 +175,10 @@ export default class TraceTool extends Vue {
                 }
             });
         }
-    }
-    private update() {
-        this.getTraceList();
-    }
+  }
+  private update() {
+      this.getTraceList();
+  }
 }
 </script>
 

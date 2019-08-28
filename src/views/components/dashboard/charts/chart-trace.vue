@@ -19,7 +19,7 @@
   <div style="overflow: auto;height: 100%;" class="scroll_hide">
   <div class="rk-chart-slow clear">
     <div class="rk-chart-slow-i" v-for="(i, index) in data" :key="index">
-      <svg class="icon vm r grey link-hover cp" @click="handleClick(i.label)">
+      <svg class="icon vm r grey link-hover cp" @click="handleClick(i.traceIds)">
         <use xlink:href="#review-list"></use>
       </svg>
       <div class="mb-5 ell" v-tooltip:top.ellipsis="i.label || ''">
@@ -35,6 +35,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
+import copy from '@/utils/copy';
 
 @Component({})
 export default class RkTopSlow extends Vue {
@@ -48,15 +49,7 @@ export default class RkTopSlow extends Vue {
     return Math.max.apply(null, temp);
   }
   private handleClick(i: any) {
-    const input = document.createElement('input');
-    input.value = i;
-    document.body.appendChild(input);
-    input.select();
-    if (document.execCommand('Copy')) {
-        document.execCommand('Copy');
-    }
-    input.remove();
-    Vue.prototype.$noty.success('Copied!', {timeout: 500});
+    copy(i);
   }
 }
 </script>

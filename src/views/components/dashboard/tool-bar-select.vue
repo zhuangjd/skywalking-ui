@@ -47,22 +47,26 @@
 import { Vue, Component, Prop } from 'vue-property-decorator';
 @Component
 export default class ToolBarSelect extends Vue {
-  @Prop() public data!: any;
-  @Prop() public current!: any;
-  @Prop() public title!: string;
-  @Prop() public icon!: string;
-  public search: string = '';
-  public visible: boolean = false;
-  get filterData() {
-    return this.data.filter((i: any) => i.label.toUpperCase().indexOf(this.search.toUpperCase()) !== -1);
-  }
-  public handleOpen() {
-    this.visible = true;
-  }
-  public handleSelect(i: any) {
-    this.$emit('onChoose', i);
-    this.visible = false;
-  }
+    @Prop() public data!: any;
+    @Prop() public current!: any;
+    @Prop() public title!: string;
+    @Prop() public icon!: string;
+    public search: string = '';
+    public visible: boolean = false;
+
+    get filterData() {
+        return this.data.filter((i: any) => i.label.toUpperCase().indexOf(this.search.toUpperCase()) !== -1);
+    }
+
+    public handleOpen() {
+        this.visible = true;
+    }
+
+    public handleSelect(i: any) {
+        this.$emit('onChoose', i);
+        this.visible = false;
+    }
+
     public updated() { /*限制只显示指定的服务和实例，参数通过URL传输过来*/
         if (this.$route.query.nodeName) {
             this.data.filter((i: any) => {

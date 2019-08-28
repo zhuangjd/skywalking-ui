@@ -60,7 +60,6 @@ export default class ToolNav extends Vue {
   private name: string = '';
   private template: string = 'nouse';
   private show: boolean = false;
-  private isAlert: boolean = true;
   get type() {
     return this.rocketComps.tree[this.rocketComps.group].type;
   }
@@ -74,32 +73,18 @@ export default class ToolNav extends Vue {
     this.handleHide();
     this.template = 'nouse';
   }
-    private mounted() { /*限制默认显示Service，参数通过URL传输过来*/
-        let index = 0;
-        if (this.$route.query.nodeName) {
-            this.rocketComps.tree[this.rocketComps.group].children.filter((i: any) => {
-                if (i.name.indexOf('Service') !== -1) {
-                    this.SET_CURRENT_COMPS(index);
-                }
-                index ++;
-            });
-        }
-    }
-    private updated() { /*限制默认显示Database，参数通过URL传输过来*/
-        let index = 0;
-        if (this.$route.query.nodeName) {
-            this.rocketComps.tree[this.rocketComps.group].children.filter((i: any) => {
-                if (/(Service)|(Endpoint)|(Instance)/.test(i.name)) {
-                    return;
-                }
-                if (i.name.indexOf('Database') !== -1 && this.isAlert) {
-                    this.SET_CURRENT_COMPS(index);
-                    this.isAlert = false;
-                }
-                index ++;
-            });
-        }
-    }
+  private mounted() { /*限制默认显示Service，参数通过URL传输过来*/
+     let index = 0;
+     if (this.$route.query.nodeName) {
+          this.rocketComps.tree[this.rocketComps.group].children.filter((i: any) => {
+              if (i.name.indexOf('Service') !== -1) {
+                  this.SET_CURRENT_COMPS(index);
+              }
+              index ++;
+              // this.$router.push({ name: 'Topology', query: { nodeName: this.$route.query.nodeName }});
+          });
+     }
+  }
 }
 </script>
 
