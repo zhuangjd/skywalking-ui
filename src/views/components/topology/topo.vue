@@ -245,7 +245,14 @@ export default {
         .attr('y', -7)
         .attr('xlink:href',d => {
           if( !d.type || d.type === 'N/A') {
-            return this['UNDEFINED']
+            const portName = d.name.lastIndexOf(':');
+            const port = d.name.substring(portName+1,d.name.length);
+            if ( port.indexOf('330') !== -1 ) {
+                d.type = 'Mysql';
+                return this['MYSQL']
+            } else {
+                return this['UNDEFINED']
+            }
           }
           return this[d.type.toUpperCase().replace('-','')];
         });
