@@ -74,8 +74,9 @@
     import { Component, Vue, Watch } from 'vue-property-decorator';
     import { Action, Getter, Mutation, State } from 'vuex-class';
     import TraceSelect from './trace-select.vue';
+
     @Component({components: {TraceSelect}})
-    export default class TraceTool extends Vue {
+    export default class TraceSearch extends Vue {
         @State('rocketbot') private rocketbotGlobal: any;
         @State('rocketTrace') private rocketTrace: any;
         @Getter('durationTime') private durationTime: any;
