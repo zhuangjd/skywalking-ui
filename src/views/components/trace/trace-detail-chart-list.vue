@@ -18,9 +18,9 @@
 <template>
   <div class="time-charts scroll_hide">
     <div class="rk-trace-t-loading" v-show="loading">
-       <svg class="icon loading">
-           <use xlink:href="#spinner"></use>
-       </svg>
+      <svg class="icon loading">
+        <use xlink:href="#spinner"></use>
+      </svg>
     </div>
     <transition-group name="fade" tag="div" class="mb-5">
       <span class="time-charts-item mr-10" v-for="(i,index) in list" :key="i" :style="`color:${computedScale(index)}`">
@@ -51,11 +51,11 @@
         <div v-for="(i, index) in this.currentSpan.logs" :key="index">
           <div class="mb-10 sm"><span class="mr-10">{{$t('time')}}:</span><span class="grey">{{i.time | dateformat}}</span></div>
           <div class="mb-15 clear" v-for="(_i, _index) in i.data" :key="_index">
-          <div class="mb-10">{{_i.key}}:<span v-if="_i.key==='stack'" class="r rk-sidebox-magnify"
-                                              @click="showCurrentSpanDetail(_i.key, _i.value)">
-         <svg class="icon">
+            <div class="mb-10">{{_i.key}}:<span v-if="_i.key==='stack'" class="r rk-sidebox-magnify"
+                                                @click="showCurrentSpanDetail(_i.key, _i.value)">
+          <svg class="icon">
             <use xlink:href="#magnify"></use>
-         </svg>
+          </svg>
         </span></div><pre class="pl-15 mt-0 mb-0 sm oa" >{{_i.value}}</pre>
           </div>
         </div>
@@ -71,6 +71,7 @@
 import copy from '@/utils/copy';
 import * as d3 from 'd3';
 import Trace from './d3-trace';
+import _ from 'lodash';
 /* eslint-disable */
 /* tslint:disable */
 export default {
@@ -91,15 +92,15 @@ export default {
       this.changeTree();
       this.tree.init({label:`TRACE_ROOT`, children: this.segmentId}, this.data);
       this.tree.draw(() => {
-         setTimeout(() => {
-            this.loading = false
-         }, 200);
+        setTimeout(() => {
+          this.loading = false
+        }, 200);
       })
     }
   },
   computed: {
     eventHub() {
-       return this.$store.getters.globalEventHub
+      return this.$store.getters.globalEventHub
     }
   },
   beforeDestroy() {
@@ -131,7 +132,7 @@ export default {
       }
     },
     computedScale(i) {
-       // 彩虹图
+       // Rainbow map
       const sequentialScale = d3.scaleSequential()
       .domain([0, this.list.length + 1])
       .interpolator(d3.interpolateCool);
@@ -145,66 +146,111 @@ export default {
       const segmentIdGroup = [];
       const fixSpans = [];
       const segmentHeaders = [];
-      this.data.forEach((span) => {
-        if (span.parentSpanId === -1) {
-          segmentHeaders.push(span);
-        } else {
-          const index = this.data.findIndex(i => (i.segmentId === span.segmentId && i.spanId === (span.spanId - 1)));
-          if (index === -1) {
-            fixSpans.push(
-              {
-                traceId: span.traceId, segmentId: span.segmentId, spanId: span.spanId - 1, parentSpanId: span.spanId - 2, refs: [], endpointName: `VNode: ${span.segmentId}`, serviceCode: 'VirtualNode', type: 'Broken', peer: '', component: `VirtualNode: #${span.spanId - 1}`, isError: true, isBroken: true, layer: 'Broken', tags: [], logs: [],
-              },
-            );
+        this.data.forEach((span) => {
+          if (span.parentSpanId === -1) {
+            segmentHeaders.push(span);
+          } else {
+            const index = this.data.findIndex(i => (i.segmentId === span.segmentId && i.spanId === (span.spanId - 1)));
+            const fixSpanKeyContent = {
+              traceId: span.traceId,
+              segmentId: span.segmentId,
+              spanId: span.spanId - 1,
+              parentSpanId: span.spanId - 2,
+            };
+            if (index === -1 && !_.find(fixSpans, fixSpanKeyContent)) {
+              fixSpans.push(
+                {
+                  ...fixSpanKeyContent, refs: [], endpointName: `VNode: ${span.segmentId}`, serviceCode: 'VirtualNode', type: `[Broken] ${span.type}`, peer: '', component: `VirtualNode: #${span.spanId - 1}`, isError: true, isBroken: true, layer: 'Broken', tags: [], logs: [],
+                },
+              );
+            }
           }
-        }
-      });
-      segmentHeaders.forEach((span) => {
-        if (span.refs.length) {
-          span.refs.forEach((ref) => {
-            const index = this.data.findIndex(i => (ref.parentSegmentId === i.segmentId && ref.parentSpanId === i.spanId));
-            if (index === -1) {
-              for (let i = 0; i <= ref.parentSpanId; i += 1) {
-                fixSpans.push(
+        });
+        segmentHeaders.forEach((span) => {
+          if (span.refs.length) {
+            span.refs.forEach((ref) => {
+              const index = this.data.findIndex(i => (ref.parentSegmentId === i.segmentId && ref.parentSpanId === i.spanId));
+              if (index === -1) {
+                // create a known broken node.
+                const i = ref.parentSpanId;
+                const fixSpanKeyContent = {
+                  traceId: ref.traceId,
+                  segmentId: ref.parentSegmentId,
+                  spanId: i,
+                  parentSpanId: i > -1 ? 0 : -1,
+                };
+                !_.find(fixSpans, fixSpanKeyContent) && fixSpans.push(
                   {
-                    traceId: ref.traceId, segmentId: ref.parentSegmentId, spanId: i, parentSpanId: i - 1, refs: [], endpointName: `VNode: ${ref.parentSegmentId}`, serviceCode: 'VirtualNode', type: 'Broken', peer: '', component: `VirtualNode: #${i}`, isError: true, isBroken: true, layer: 'Broken', tags: [], logs: [],
+                    ...fixSpanKeyContent, refs: [], endpointName: `VNode: ${ref.parentSegmentId}`, serviceCode: 'VirtualNode', type: `[Broken] ${ref.type}`, peer: '', component: `VirtualNode: #${i}`, isError: true, isBroken: true, layer: 'Broken', tags: [], logs: [],
                   },
                 );
+                // if root broken node is not exist, create a root broken node.
+                if (fixSpanKeyContent.parentSpanId > -1) {
+                  const fixRootSpanKeyContent = {
+                    traceId: ref.traceId,
+                    segmentId: ref.parentSegmentId,
+                    spanId: 0,
+                    parentSpanId: -1,
+                  };
+                  !_.find(fixSpans, fixRootSpanKeyContent) && fixSpans.push(
+                    {
+                      ...fixRootSpanKeyContent,
+                      refs: [],
+                      endpointName: `VNode: ${ref.parentSegmentId}`,
+                      serviceCode: 'VirtualNode',
+                      type: `[Broken] ${ref.type}`,
+                      peer: '',
+                      component: `VirtualNode: #0`,
+                      isError: true,
+                      isBroken: true,
+                      layer: 'Broken',
+                      tags: [],
+                      logs: [],
+                    },
+                  );
+                }
+              }
+            });
+          }
+        });
+        [...fixSpans, ...this.data].forEach(i => {
+          i.label=i.endpointName || 'no operation name';
+          i.children = [];
+          if(segmentGroup[i.segmentId] === undefined){
+            segmentIdGroup.push(i.segmentId);
+            segmentGroup[i.segmentId] = [];
+            segmentGroup[i.segmentId].push(i);
+          }else{
+            segmentGroup[i.segmentId].push(i);
+          }
+        });
+        segmentIdGroup.forEach(id => {
+          let currentSegment = segmentGroup[id].sort((a,b) => b.parentSpanId-a.parentSpanId);
+          currentSegment.forEach(s =>{
+            let index = currentSegment.findIndex(i => i.spanId === s.parentSpanId);
+            if (index !== -1) {
+              if ((currentSegment[index].isBroken && currentSegment[index].parentSpanId === -1) || !currentSegment[index].isBroken) {
+                currentSegment[index].children.push(s);
+                currentSegment[index].children.sort((a, b) => a.spanId - b.spanId);
               }
             }
-          });
-        }
-      });
-      [...fixSpans, ...this.data].forEach(i => {
-        i.label=i.endpointName || 'no operation name';
-        i.children = [];
-        if(segmentGroup[i.segmentId] === undefined){
-          segmentIdGroup.push(i.segmentId);
-          segmentGroup[i.segmentId] = [];
-          segmentGroup[i.segmentId].push(i);
-        }else{
-          segmentGroup[i.segmentId].push(i);
-        }
-      });
-      segmentIdGroup.forEach(id => {
-        let currentSegment = segmentGroup[id].sort((a,b) => b.parentSpanId-a.parentSpanId);
-        currentSegment.forEach(s =>{
-          let index = currentSegment.findIndex(i => i.spanId === s.parentSpanId);
-          if(index !== -1){
-            currentSegment[index].children.push(s);
-            currentSegment[index].children.sort((a, b) => a.spanId - b.spanId );
-          }
+            if (s.isBroken) {
+              const children = _.filter(this.data, (span) => {
+                return _.find(span.refs, {traceId: s.traceId, parentSegmentId: s.segmentId, parentSpanId: s.spanId});
+              });
+              children.length > 0 && s.children.push(...children);
+            }
+          })
+          segmentGroup[id] = currentSegment[currentSegment.length-1]
         })
-        segmentGroup[id] = currentSegment[currentSegment.length-1]
-      })
-      segmentIdGroup.forEach(id => {
-        segmentGroup[id].refs.forEach(ref => {
-          if(ref.traceId === this.traceId) {
-            this.traverseTree(segmentGroup[ref.parentSegmentId],ref.parentSpanId,ref.parentSegmentId,segmentGroup[id])
-          };
+        segmentIdGroup.forEach(id => {
+          segmentGroup[id].refs.forEach(ref => {
+            if(ref.traceId === this.traceId) {
+              this.traverseTree(segmentGroup[ref.parentSegmentId],ref.parentSpanId,ref.parentSegmentId,segmentGroup[id])
+            };
+          })
+          // if(segmentGroup[id].refs.length !==0 ) delete segmentGroup[id];
         })
-        // if(segmentGroup[id].refs.length !==0 ) delete segmentGroup[id];
-      })
       for (let i in segmentGroup) {
         if(segmentGroup[i].refs.length ===0 )
         this.segmentId.push(segmentGroup[i]);
@@ -224,26 +270,26 @@ export default {
       }
     },
     showCurrentSpanDetail(title, text) {
-        const textLineNumber = text.split('\n').length;
-        let textHeight = textLineNumber * 20.2 + 10;
-        const tmpHeight = window.innerHeight * 0.9
-        textHeight = textHeight >= tmpHeight ? tmpHeight : textHeight;
-        this.$modal.show('dialog', {
-            title,
-            text: `<div style="height:${textHeight}px">${text}</div>`,
-            buttons: [
-               {
-                    title: 'Copy',
-                    handler: () => {
-                        this.copy(text);
-                    },
-                },
-                {
-                   title: 'Close',
-                },
-            ],
-        })
-    }
+      const textLineNumber = text.split('\n').length;
+      let textHeight = textLineNumber * 20.2 + 10;
+      const tmpHeight = window.innerHeight * 0.9
+      textHeight = textHeight >= tmpHeight ? tmpHeight : textHeight;
+      this.$modal.show('dialog', {
+        title,
+        text: `<div style="height:${textHeight}px">${text}</div>`,
+        buttons: [
+          {
+            title: 'Copy',
+            handler: () => {
+              this.copy(text);
+            },
+          },
+          {
+            title: 'Close',
+          },
+        ],
+      })
+    },
   }
 };
 </script>
@@ -252,7 +298,7 @@ export default {
   overflow: auto;
   padding: 10px 30px;
   position: relative;
-  min-height: 150px;
+  min-height: 150px;  
 }
 .trace-node .group {
   cursor: pointer;
@@ -292,8 +338,8 @@ export default {
    }
  }
 .dialog-c-text {
-    white-space: pre;
-    overflow: auto;
-    font-family: monospace;
+  white-space: pre;
+  overflow: auto;
+  font-family: monospace;
 }
 </style>
