@@ -87,6 +87,7 @@
         @Action('rocketTrace/GET_TRACELIST') private GET_TRACELIST: any;
         @Action('rocketTrace/SET_TRACE_FORM') private SET_TRACE_FORM: any;
         @Mutation('rocketTrace/SET_TRACE_FORM_ITEM') private SET_TRACE_FORM_ITEM: any;
+
         private time!: Date[];
         private status: boolean = true;
         private maxTraceDuration: string = localStorage.getItem('maxTraceDuration') || '';
@@ -96,9 +97,7 @@
         private endpointName: string = localStorage.getItem('endpointName') || '';
         private traceId: string = localStorage.getItem('traceId') || '';
         private traceState: Option = {label: 'All', key: 'ALL'};
-        get eventHub() {
-            return this.$store.getters.globalEventHub;
-        }
+
         private dateFormat = (date: Date, step: string) => {
             const year = date.getFullYear();
             const monthTemp = date.getMonth() + 1;
@@ -198,9 +197,9 @@
                 localStorage.setItem('traceId', this.traceId);
             }
             this.SET_TRACE_FORM(temp);
-            this.eventHub.$emit('SET_LOADING_TRUE', () => {
+            this.$eventBus.$emit('SET_LOADING_TRUE', () => {
                 this.GET_TRACELIST().then(() => {
-                    this.eventHub.$emit('SET_LOADING_FALSE');
+                    this.$eventBus.$emit('SET_LOADING_FALSE');
                 });
             });
         }
