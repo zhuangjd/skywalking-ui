@@ -77,10 +77,8 @@ export default class Header extends Vue {
   private handleReload() {
     const gap = this.duration.end.getTime() - this.duration.start.getTime();
     const utcCopy: any = -(new Date().getTimezoneOffset() / 60);
-    this.$emit('reloadFooter', [
-      new Date(new Date().getTime() - gap),
-      new Date(),
-    ]);
+    const time: Date[] = [new Date(new Date().getTime() - gap), new Date()];
+    this.SET_DURATION(timeFormat(time));
   }
   private handleAuto() {
     this.auto = !this.auto;
