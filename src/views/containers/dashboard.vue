@@ -80,7 +80,7 @@ export default class Dashboard extends Vue {
       instanceId: this.stateDashboardOption.currentInstance.key || '',
       databaseId: this.stateDashboardOption.currentDatabase.key || '',
       duration: this.durationTime,
-    });
+    }).catch((e: any) => {return; });
   }
   private handleOption() {
     return this.MIXHANDLE_GET_OPTION({compType: this.compType, duration: this.durationTime})
