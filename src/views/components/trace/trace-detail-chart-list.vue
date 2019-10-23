@@ -73,8 +73,6 @@
     import * as d3 from 'd3';
     import Trace from './d3-trace';
     import _ from 'lodash';
-    /* eslint-disable */
-    /* tslint:disable */
     export default {
         props: ['data', 'traceId'],
         data() {
@@ -201,7 +199,10 @@
                                 };
                                 if (!_.find(fixSpans, fixSpanKeyContent)) {
                                     fixSpans.push({
-                                       ...fixSpanKeyContent, refs: [], endpointName: `VNode: ${ref.parentSegmentId}`, serviceCode: 'VirtualNode', type: `[Broken] ${ref.type}`, peer: '', component: `VirtualNode: #${i}`, isError: true, isBroken: true, layer: 'Broken', tags: [], logs: [],
+                                        ...fixSpanKeyContent, refs: [], endpointName: `VNode: ${ref.parentSegmentId}`,
+                                      serviceCode: 'VirtualNode', type: `[Broken] ${ref.type}`, peer: '',
+                                      component: `VirtualNode: #${i}`, isError: true, isBroken: true,
+                                      layer: 'Broken', tags: [], logs: [],
                                     });
                                 }
                                 // if root broken node is not exist, create a root broken node.
@@ -260,7 +261,8 @@
                         }
                         if (s.isBroken) {
                             const children = _.filter(this.data, (span) => {
-                                return _.find(span.refs, {traceId: s.traceId, parentSegmentId: s.segmentId, parentSpanId: s.spanId});
+                                return _.find(span.refs, {traceId: s.traceId,
+                                   parentSegmentId: s.segmentId, parentSpanId: s.spanId});
                             });
                             if (children.length > 0) {
                                 s.children.push(...children);
