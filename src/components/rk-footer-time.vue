@@ -15,23 +15,27 @@
  * limitations under the License.
  */
 
-module.exports = {
-  devServer: {
-    proxy: {
-      '/graphql': {
-        target: `${process.env.SW_PROXY_TARGET || "http://172.16.1.162:12800"}`,
-        changeOrigin: true,
+<template>
+  <RkDate class="mr-10" v-model="time" position="top" format="YYYY-MM-DD HH:mm:ss"/>
+</template>
+
+<script lang="ts">
+import timeFormat from '@/utils/timeFormat';
+export default {
+  computed: {
+    time: {
+      get() {
+        const that: any = this;
+        return [that.$store.state.rocketbot.durationRow.start, that.$store.state.rocketbot.durationRow.end];
+      },
+      set(val: Date[]) {
+        const that: any = this;
+        that.$store.dispatch('SET_DURATION', timeFormat(val));
       },
     },
   },
-  chainWebpack: config => {
-    const svgRule = config.module.rule('svg');
-    svgRule.uses.clear();
-    svgRule
-      .use('svg-sprite-loader')
-      .loader('svg-sprite-loader')
-      .options({
-        symbolId: '[name]',
-      });
-  },
 };
+</script>
+
+<style scoped>
+</style>

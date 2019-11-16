@@ -38,7 +38,7 @@
       </a>
       <div class="flex-h">
         <TraceSelect :hasSearch="true" :title="this.$t('service')" :value="service" @input="chooseService"
-                     :data="rocketTrace.services"/>
+                     :data="rocketTrace.services" :readonly="inTopo"/>
         <TraceSelect :hasSearch="true" :title="this.$t('instance')" v-model="instance" :data="rocketTrace.instances"/>
         <TraceSelect :title="this.$t('status')" :value="traceState" @input="chooseStatus"
                      :data="[{label:'All', key: 'ALL'}, {label:'Success', key: 'SUCCESS'}, {label:'Error', key: 'ERROR'}]"/>
@@ -71,7 +71,7 @@
 
 <script lang="ts">
     import { Duration, Option } from '@/types/global';
-    import { Component, Vue, Watch } from 'vue-property-decorator';
+    import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
     import { Action, Getter, Mutation, State } from 'vuex-class';
     import TraceSelect from './trace-select.vue';
 
@@ -92,11 +92,14 @@
         private status: boolean = true;
         private maxTraceDuration: string = localStorage.getItem('maxTraceDuration') || '';
         private minTraceDuration: string = localStorage.getItem('minTraceDuration') || '';
-        private service: Option = {label: 'All', key: ''};
+        @Prop({default: {label: 'All', key: ''}})
+        private service!: Option;
         private instance: Option = {label: 'All', key: ''};
         private endpointName: string = localStorage.getItem('endpointName') || '';
         private traceId: string = localStorage.getItem('traceId') || '';
         private traceState: Option = {label: 'All', key: 'ALL'};
+        @Prop({default: false, type: Boolean})
+        private inTopo!: boolean;
 
         private dateFormat = (date: Date, step: string) => {
             const year = date.getFullYear();
@@ -133,6 +136,7 @@
                 return `${year}-${month}-${day} ${hour}${minute}`;
             }
         }
+
         private globalTimeFormat = (time: Date[]): any => {
             let step = 'MINUTE';
             const unix = Math.round(time[1].getTime()) - Math.round(time[0].getTime());
@@ -177,17 +181,21 @@
             if (this.service.key) {
                 temp.serviceId = this.service.key;
             }
+
             if (this.instance.key) {
                 temp.serviceInstanceId = this.instance.key;
             }
+
             if (this.maxTraceDuration) {
                 temp.maxTraceDuration = this.maxTraceDuration;
                 localStorage.setItem('maxTraceDuration', this.maxTraceDuration);
             }
+
             if (this.minTraceDuration) {
                 temp.minTraceDuration = this.minTraceDuration;
                 localStorage.setItem('minTraceDuration', this.minTraceDuration);
             }
+
             if (this.endpointName) {
                 temp.endpointName = this.endpointName;
                 localStorage.setItem('endpointName', this.endpointName);
@@ -203,6 +211,7 @@
                 });
             });
         }
+
         private clearSearch() {
             this.RESET_DURATION();
             this.status = true;
@@ -220,15 +229,21 @@
             this.SET_TRACE_FORM_ITEM({type: 'queryOrder', data: ''});
             this.getTraceList();
         }
+
         @Watch('rocketbotGlobal.durationRow')
         private durationRowWatch(value: Duration) {
             this.time = [value.start, value.end];
         }
+
         private created() {
             this.time = [this.rocketbotGlobal.durationRow.start, this.rocketbotGlobal.durationRow.end];
         }
+
         private mounted() {
             this.getTraceList();
+            if (this.service && this.service.key) {
+              this.GET_INSTANCES({duration: this.durationTime, serviceId: this.service.key});
+            }
         }
         private beforeUpdate() { /*限制只查询指定的服务，参数通过URL传输过来*/
             const nodeNameStr = this.$route.query.nodeName;
@@ -260,7 +275,7 @@
     padding: 2px 5px;
     border-radius: 3px;
   }
-  .rk-trace-search-range {
+  .rk-trace-search-range, .rk-auto-select {
     border-radius: 3px;
     background-color: #fff;
     padding: 1px;

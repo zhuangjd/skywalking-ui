@@ -18,15 +18,17 @@
 import RkHeader from './rk-header.vue';
 import RkFooter from './rk-footer.vue';
 import RkProgress from './rk-progress.vue';
+import RkFooterTime from './rk-footer-time.vue';
 import RkPage from './rk-page.vue';
 import RkDate from './rk-date.vue';
 import RkPanel from './rk-panel.vue';
 import RkSidebox from './rk-sidebox.vue';
 import RkEcharts from './rk-echarts.vue';
 import noty from './noty';
+import RkSelect from './rk-select.vue';
 
 const components: any = {
-  RkHeader, RkFooter, RkProgress, RkDate, RkPanel, RkEcharts, RkPage, RkSidebox,
+  RkHeader, RkFooter, RkProgress, RkDate, RkPanel, RkEcharts, RkPage, RkSidebox, RkFooterTime, RkSelect,
 };
 const componentsName: string[] = Object.keys(components);
 export default {install: (vue: any) => {
