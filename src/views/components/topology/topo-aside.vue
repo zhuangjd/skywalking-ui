@@ -210,9 +210,9 @@ export default class TopoAside extends Vue {
 
   private beforeDestroy() {
     window.removeEventListener('resize', this.resize);
-    this.CLEAR_TOPO_INFO();
-    this.CLEAR_TOPO();
-    this.$store.unregisterModule('rocketTopo');
+    // this.CLEAR_TOPO_INFO();报错暂时去掉
+    // this.CLEAR_TOPO();报错暂时去掉
+    // this.$store.unregisterModule('rocketTopo');报错暂时去掉
   }
 
   get types() {
