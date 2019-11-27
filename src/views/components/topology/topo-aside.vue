@@ -294,11 +294,15 @@ export default class TopoAside extends Vue {
   border-radius: 4px 4px 4px 4px;
   text-align: center;
   padding: 10px;
+  z-index: 101;
 }
 .link-topo-aside-box{
   border-radius: 4px;
+  position: absolute;
+  width: 280px;
+  z-index: 101;
   color: #ddd;
-  background-color: #252a2f9a;
+  background-color: #333;
   padding: 15px 20px 10px;
   .label{
     display: inline-block;
