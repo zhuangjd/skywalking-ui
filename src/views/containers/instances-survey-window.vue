@@ -22,7 +22,6 @@
       title="Instances"
       :visible.sync="isShowSync"
       direction="rtl"
-      :modal-append-to-body="false"
       size="80%">
       <div class="rk-dashboard-bar flex-h">
         <ToolBarSelect
@@ -49,13 +48,11 @@
   import Vue from 'vue';
   import { Component, PropSync, Watch } from 'vue-property-decorator';
   import { Action, Getter, State } from 'vuex-class';
-
   interface Instance {
     label: string;
     key: string;
     name?: string;
   }
-
   @Component({
     components: {
       InstancesSurvey,
@@ -74,28 +71,22 @@
     @PropSync('isShow', { default: false })
     private isShowSync!: boolean;
     private instancesSurveyHeight = '100%';
-
     private tabsLoading = true;
     private instanceName: string = '0';
     private instances: any[] = [];
-
     private dragIndex: number = NaN;
-
     public dragStart(index: number) {
       this.dragIndex = index;
     }
-
     private selectInstance(i: any) {
       this.SELECT_INSTANCE({instance: i, duration: this.durationTime});
     }
-
     private handleRefresh() {
       this.GET_QUERY({
         serviceId: this.stateDashboardOption.currentService.key || '',
         duration: this.durationTime,
       });
     }
-
     private handleOption() {
       this.MIXHANDLE_CHANGE_GROUP_WITH_CURRENT({ index: 0, current: 3 });
       return this.MIXHANDLE_GET_OPTION({ compType: 'service', duration: this.durationTime })
@@ -103,7 +94,6 @@
         this.handleRefresh();
       });
     }
-
     @Watch('stateDashboardOption.instances')
     private watchInstances(instances: Instance[]) {
       _.forEach(instances, (instance) => {
@@ -118,20 +108,16 @@
       }
       this.tabsLoading = false;
     }
-
     private beforeMount() {
       this.handleOption();
     }
-
     private mounted() {
       this.resize();
       window.addEventListener('resize', this.resize);
     }
-
     private resize() {
       this.instancesSurveyHeight = `${document.body.clientHeight - 101}px`;
     }
-
     private beforeDestroy() {
       window.removeEventListener('resize', this.resize);
     }
@@ -139,5 +125,4 @@
 </script>
 
 <style lang="less" scoped>
-
 </style>

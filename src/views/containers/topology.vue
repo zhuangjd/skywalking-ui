@@ -28,7 +28,7 @@ import { AxiosResponse } from 'axios';
 import Topo from '../components/topology/topo.vue';
 import TopoDate from '../components/topology/topo-date.vue';
 import TopoAside from '../components/topology/topo-aside.vue';
-import { State as topoState} from '@/store/modules/topology';
+import topo, { State as topoState} from '@/store/modules/topology';
 
 @Component({components: {Topo, TopoAside, TopoDate}})
 export default class Topology extends Vue {
@@ -38,7 +38,6 @@ export default class Topology extends Vue {
   @Action('rocketTopo/CLEAR_TOPO') private CLEAR_TOPO: any;
   @Action('rocketTopo/CLEAR_TOPO_INFO') private CLEAR_TOPO_INFO: any;
   @Getter('durationTime') private durationTime: any;
-
   private beforeMount(): void {
     this.SET_EVENTS([this.getTopo]);
   }
@@ -48,9 +47,13 @@ export default class Topology extends Vue {
   private getTopo() {
     this.GET_TOPO({duration: this.durationTime});
   }
+  private beforeCreate() {
+    this.$store.registerModule('rocketTopo', topo);
+  }
   private beforeDestroy() {
     this.CLEAR_TOPO_INFO();
     this.CLEAR_TOPO();
+    this.$store.unregisterModule('rocketTopo');
   }
 }
 
