@@ -20,14 +20,14 @@
       <div @click="showSelectSpan" :class="['trace-item', 'level'+( data.level - 1)]">
         <div :class="['method', 'level'+( data.level - 1)]" :style="{'text-indent': (data.level - 1) * 10 + 'px' }">
           <svg class="icon vm cp trans" :style="!displayChildren?'transform: rotate(-90deg);':''" @click.stop="toggle" v-if="data.children && data.children.length > 0">
-             <use xlink:href="#arrow-down"></use>
+            <use xlink:href="#arrow-down"></use>
           </svg>
           <span v-tooltip:bottom="{content: data.endpointName, popperCls: ['trace-table-tooltip']}">
             {{data.endpointName}}
           </span>
         </div>
         <div class="start-time">
-           {{data.startTime | dateformat}}
+          {{data.startTime | dateformat}}
         </div>
         <div class="gap">
           0

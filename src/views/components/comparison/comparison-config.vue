@@ -1,24 +1,18 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** * Licensed to the Apache Software Foundation (ASF) under one or more *
+contributor license agreements. See the NOTICE file distributed with * this work
+for additional information regarding copyright ownership. * The ASF licenses
+this file to You under the Apache License, Version 2.0 * (the "License"); you
+may not use this file except in compliance with * the License. You may obtain a
+copy of the License at * * http://www.apache.org/licenses/LICENSE-2.0 * * Unless
+required by applicable law or agreed to in writing, software * distributed under
+the License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. * See the License for the
+specific language governing permissions and * limitations under the License. */
 
 <template>
   <div class="rk-comparison-config" v-if="currentOptions">
-    <h4>{{this.$t("previousService")}}</h4>
-    <label>{{this.$t("type")}}</label>
+    <h4>{{ this.$t('previousService') }}</h4>
+    <label>{{ this.$t('type') }}</label>
     <RkSelect
       class="mb-5"
       :current="currentOptions.preType"
@@ -26,7 +20,7 @@
       @onChoose="(item) => changOption(item, changeType.PreType)"
     />
     <div v-if="currentOptions.preType.key !== 'Database'">
-      <label>{{this.$t("service")}}</label>
+      <label>{{ this.$t('service') }}</label>
       <RkSelect
         class="mb-5"
         :current="currentOptions.preService"
@@ -35,7 +29,7 @@
       />
     </div>
     <div v-if="currentOptions.preType.key !== 'Service'">
-      <label>{{this.$t("object")}}</label>
+      <label>{{ this.$t('object') }}</label>
       <RkSelect
         class="mb-5"
         :current="currentOptions.preObject"
@@ -43,7 +37,7 @@
         @onChoose="(item) => changOption(item, changeType.PreObject)"
       />
     </div>
-    <label>{{this.$t("metrics")}}</label>
+    <label>{{ this.$t('metrics') }}</label>
     <RkSelect
       class="mb-5"
       :mode="'multiple'"
@@ -51,8 +45,8 @@
       :data="optSource.preMetricsSource"
       @onChoose="(item) => changOption(item, changeType.PreMetrics)"
     />
-    <h4>{{this.$t("nextService")}}</h4>
-    <label>{{this.$t("type")}}</label>
+    <h4>{{ this.$t('nextService') }}</h4>
+    <label>{{ this.$t('type') }}</label>
     <RkSelect
       class="mb-5"
       :current="currentOptions.nextType"
@@ -60,7 +54,7 @@
       @onChoose="(item) => changOption(item, changeType.NextType)"
     />
     <div v-if="currentOptions.nextType.key !== 'Database'">
-      <label>{{this.$t("service")}}</label>
+      <label>{{ this.$t('service') }}</label>
       <RkSelect
         class="mb-5"
         :current="currentOptions.nextService"
@@ -69,7 +63,7 @@
       />
     </div>
     <div v-if="currentOptions.nextType.key !== 'Service'">
-      <label>{{this.$t("object")}}</label>
+      <label>{{ this.$t('object') }}</label>
       <RkSelect
         class="mb-5"
         :current="currentOptions.nextObject"
@@ -77,7 +71,7 @@
         @onChoose="(item) => changOption(item, changeType.NextObject)"
       />
     </div>
-    <label>{{this.$t("metrics")}}</label>
+    <label>{{ this.$t('metrics') }}</label>
     <RkSelect
       class="mb-5"
       :mode="'multiple'"
@@ -86,8 +80,8 @@
       @onChoose="(item) => changOption(item, changeType.NextMetrics)"
     />
     <div class="mb-5 query-data">
-      <a @click="updateChart">{{this.$t("queryData")}}</a>
-      <a @click="resetService">{{this.$t("reset")}}</a>
+      <a @click="updateChart">{{ this.$t('queryData') }}</a>
+      <a @click="resetService">{{ this.$t('reset') }}</a>
     </div>
   </div>
 </template>
@@ -95,12 +89,14 @@
   import { Component, Vue, Prop } from 'vue-property-decorator';
   import { State, Action, Getter } from 'vuex-class';
   import { IOption } from '@/types/comparison';
+
   @Component
   export default class ComparisonConfig extends Vue {
     @Prop() private currentOptions: any;
     @Prop() private optSource: any;
     @Getter('durationTime') private durationTime: any;
     @Getter('comparisonStore/ChangeType') private changeType: any;
+
     private changOption(item: IOption, key: string) {
       this.$store.dispatch('comparisonStore/SELECT_CONFIG', {
         duration: this.durationTime,
@@ -108,17 +104,21 @@
         option: item,
       });
     }
+
     private updateChart() {
       this.$store.dispatch('comparisonStore/RENDER_CHART', this.durationTime);
     }
+
     private resetService() {
       this.$store.commit('comparisonStore/SET_ISPREVIOUS', 'init');
-      this.$store.dispatch('comparisonStore/GET_SERVICES', {duration: this.durationTime});
+      this.$store.dispatch('comparisonStore/GET_SERVICES', {
+        duration: this.durationTime,
+      });
     }
   }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
   .rk-comparison-config {
     width: 380px;
     height: 100%;
@@ -138,7 +138,7 @@
     }
     .reload {
       background: #fff;
-      color: #333;
+      color: #2b3037;
       position: absolute;
       top: 3px;
     }
@@ -163,7 +163,7 @@
       margin-top: 70px;
       :first-child {
         border-right: 1px solid #fff;
-        width: 160px;
+        width: 260px;
       }
     }
   }

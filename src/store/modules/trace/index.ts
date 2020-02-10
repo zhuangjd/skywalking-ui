@@ -36,7 +36,7 @@ const initState: State = {
   services: [],
   instances: [],
   traceForm: {
-    paging: {pageNum: 1, pageSize: 15, needTotal: true},
+    paging: { pageNum: 1, pageSize: 15, needTotal: true },
     queryOrder: localStorage.getItem('traceQueryOrder') || 'BY_DURATION',
   },
   traceList: [],
@@ -58,30 +58,30 @@ const getters = {};
 // mutations
 const mutations: MutationTree<State> = {
   [types.SET_SERVICES](state: State, data: Option[]): void {
-    state.services = [{label: 'All', key: ''}].concat(data);
+    state.services = [{ label: 'All', key: '' }].concat(data);
   },
   [types.SET_INSTANCES](state: State, data: Option[]): void {
-    state.instances = [{label: 'All', key: ''}].concat(data);
+    state.instances = [{ label: 'All', key: '' }].concat(data);
   },
   [types.SET_TRACE_FORM](state: State, data: any): void {
     if (data.queryOrder) {
-       if (data.queryOrder === '') {
-          data.queryOrder = 'BY_DURATION';
-          localStorage.setItem('traceQueryOrder', 'BY_DURATION');
-       } else {
-          localStorage.setItem('traceQueryOrder', data.queryOrder);
-       }
+      if (data.queryOrder === '') {
+        data.queryOrder = 'BY_DURATION';
+        localStorage.setItem('traceQueryOrder', 'BY_DURATION');
+      } else {
+        localStorage.setItem('traceQueryOrder', data.queryOrder);
+      }
     }
     state.traceForm = data;
   },
   [types.SET_TRACE_FORM_ITEM](state: State, params: any): void {
     if (params.type && params.type === 'queryOrder') {
-        if (params.data === '') {
-            params.data = 'BY_DURATION';
-            localStorage.setItem('traceQueryOrder', 'BY_DURATION');
-        } else {
-            localStorage.setItem('traceQueryOrder', params.data);
-        }
+      if (params.data === '') {
+        params.data = 'BY_DURATION';
+        localStorage.setItem('traceQueryOrder', 'BY_DURATION');
+      } else {
+        localStorage.setItem('traceQueryOrder', params.data);
+      }
     }
     state.traceForm[params.type] = params.data;
   },
@@ -98,14 +98,14 @@ const mutations: MutationTree<State> = {
     state.currentTrace = data;
   },
   [types.SET_DEFAULT_EMPTY_TRACE](state: State): void {
-     state.currentTrace = {
-         operationNames: [],
-         duration: 0,
-         isError: false,
-         key: '',
-         start: '',
-         traceIds: [],
-     };
+    state.currentTrace = {
+      operationNames: [],
+      duration: 0,
+      isError: false,
+      key: '',
+      start: '',
+      traceIds: [],
+    };
   },
 };
 
@@ -116,7 +116,7 @@ const actions: ActionTree<State, any> = {
       .query('queryServices')
       .params(params)
       .then((res: AxiosResponse) => {
-         context.commit(types.SET_SERVICES, res.data.data.services);
+        context.commit(types.SET_SERVICES, res.data.data.services);
       });
   },
   GET_INSTANCES(context: { commit: Commit }, params: any): Promise<void> {
@@ -124,20 +124,23 @@ const actions: ActionTree<State, any> = {
       .query('queryServiceInstance')
       .params(params)
       .then((res: AxiosResponse) => {
-          context.commit(types.SET_INSTANCES, res.data.data.instanceId);
+        context.commit(types.SET_INSTANCES, res.data.data.instanceId);
       });
   },
-  SET_TRACE_FORM(context: { commit: Commit, dispatch: Dispatch }, params: any): void {
+  SET_TRACE_FORM(
+    context: { commit: Commit; dispatch: Dispatch },
+    params: any,
+  ): void {
     context.commit(types.SET_TRACE_FORM, params);
   },
-  GET_TRACELIST(context: { state: State, commit: Commit }): Promise<void> {
+  GET_TRACELIST(context: { state: State; commit: Commit }): Promise<void> {
     context.commit(types.SET_TRACELIST, []);
     return graph
       .query('queryTraces')
-      .params({condition: context.state.traceForm})
+      .params({ condition: context.state.traceForm })
       .then((res: AxiosResponse) => {
-         context.commit(types.SET_TRACELIST, res.data.data.traces.data);
-         context.commit(types.SET_TRACELIST_TOTAL, res.data.data.traces.total);
+        context.commit(types.SET_TRACELIST, res.data.data.traces.data);
+        context.commit(types.SET_TRACELIST_TOTAL, res.data.data.traces.total);
       });
   },
   GET_TRACE_SPANS(context: { commit: Commit }, params: any): Promise<void> {
@@ -146,7 +149,7 @@ const actions: ActionTree<State, any> = {
       .query('queryTrace')
       .params(params)
       .then((res: AxiosResponse) => {
-         context.commit(types.SET_TRACE_SPANS, res.data.data.trace.spans);
+        context.commit(types.SET_TRACE_SPANS, res.data.data.trace.spans);
       });
   },
 };

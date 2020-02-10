@@ -79,7 +79,7 @@ const m = {
   start: 'Start',
   spans: 'Spans',
   spanInfo: 'Span Info',
-  spanType:  'Span Type',
+  spanType: 'Span Type',
   time: 'Time',
   tags: 'Tags',
   logs: 'Logs',
@@ -104,6 +104,8 @@ const m = {
   nextService: 'Next Service',
   object: 'Object',
   metrics: 'Metrics',
+  ShowInstanceDependency: 'Show Instance Dependency',
+  InstanceDependencyTitle: 'Service Instance Dependency',
 };
 
 export default m;

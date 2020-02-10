@@ -1,369 +1,252 @@
-/**
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+/** * Licensed to the Apache Software Foundation (ASF) under one or more *
+contributor license agreements. See the NOTICE file distributed with * this work
+for additional information regarding copyright ownership. * The ASF licenses
+this file to You under the Apache License, Version 2.0 * (the "License"); you
+may not use this file except in compliance with * the License. You may obtain a
+copy of the License at * * http://www.apache.org/licenses/LICENSE-2.0 * * Unless
+required by applicable law or agreed to in writing, software * distributed under
+the License is distributed on an "AS IS" BASIS, * WITHOUT WARRANTIES OR
+CONDITIONS OF ANY KIND, either express or implied. * See the License for the
+specific language governing permissions and * limitations under the License. */
 
 <template>
   <aside class="link-topo-aside">
-    <Radial v-if="radioStatus" @showRadial="showRadial" :datas="{nodes:stateTopo.nodes,calls:stateTopo.calls}"/>
-    <svg class="link-topo-aside-btn mb-10 icon cp lg" @click="show = !show" :style="`position:${show?'absolute':'initial'};left:${show?290:0}px;transform: rotate(${show?0 : 180}deg);`">
-      <use xlink:href="#chevron-left"></use>
+    <Radial
+      v-if="radioStatus"
+      :datas="{ nodes: stateTopo.nodes, calls: stateTopo.calls }"
+    />
+    <svg
+      class="link-topo-aside-btn icon cp lg"
+      @click="showRadial()"
+      :style="`position:absolute;left:290px;`"
+    >
+      <use xlink:href="#issues" />
     </svg>
-    <svg class="link-topo-aside-btn mb-10 icon cp lg" @click="showRadial(true)" :style="`position:absolute;left:290px;top:50px;`">
-      <use xlink:href="#issues"></use>
+    <svg
+      v-if="showServerInfo"
+      class="link-topo-aside-btn icon cp lg"
+      @click="show = !show"
+      :style="
+        `position:absolute;left:290px;transform: rotate(${
+          show ? 0 : 180
+        }deg);top:45px;`
+      "
+    >
+      <use xlink:href="#chevron-left" />
     </svg>
-    <TopoService/>
-    <div class="link-topo-aside-box mb-10" v-if="!stateTopo.currentNode.name && show">
-      <div class="mb-20">
-        <span class="b dib mr-20">{{$t('allServices')}}</span>
-      </div>
-      <div class="mb-10" v-for="(val, key, index) in types" :key="index">
-        <span class="r">{{val}}</span>
-        <span class="grey">{{key}}</span>
-      </div>
-    </div>
-    <div class="link-topo-aside-box mb-10" v-else-if="show">
-      <div class="mb-20">
-        <span class="b dib mr-20">{{$t('serviceDetail')}}</span>
-      </div>
-      <div class="mb-10">
-        <span class="label grey">{{$t('name')}}</span>
-        <span class="content">{{stateTopo.currentNode.name}}</span>
-      </div>
-      <div class="mb-10">
-        <span class="label grey">{{$t('type')}}</span>
-        <span class="content">{{stateTopo.currentNode.type}}</span>
-      </div>
-      <div class="mb-10" v-if="stateTopo.currentNode.cpm">
-        <span class="label grey">{{$t('cpm')}}</span>
-        <span class="content">{{stateTopo.currentNode.cpm}}</span>
-      </div>
-      <div class="mb-10" v-if="stateTopo.currentNode.sla">
-        <span class="label grey">{{$t('sla')}}</span>
-        <span class="content">{{stateTopo.currentNode.sla || ''}}%</span>
-      </div>
-      <div class="mb-10" v-if="stateTopo.currentNode.latency">
-        <span class="label grey">{{$t('latency')}}</span>
-        <span class="content">{{stateTopo.currentNode.latency}} ms</span>
-      </div>
-    </div>
-    <div :class="`link-topo-aside-box link-topo-aside-box-${isMini?'min':'max'}`"
-         :style="`top:106px;position: fixed;right: 30px;${showInfoCount === 0 ? 'animation: unset;': ''}`">
-      <svg v-if="stateTopo.selectedCallId"
-           :style="`position:absolute;left:-48px;top:11px;transform: rotate(${isMini?0 : 180}deg);`"
-           class="link-topo-aside-btn mb-10 icon cp lg"
-           @click="setShowInfo"
+    <TopoService />
+    <div v-if="show">
+      <div
+        class="link-topo-aside-box"
+        style="top:45px"
+        v-if="!stateTopo.selectedServiceCall && showServerInfo"
       >
-        <use xlink:href="#chevron-left" />
-      </svg>
-      <div class="mb-5 clear">
-        <span class="b dib mr-20 vm">{{ $t('detectPoint') }}</span>
-        <span
-            v-if="stateTopo.detectPoints.indexOf('CLIENT') !== -1"
-            :class="{'active':!stateTopo.mode}"
-            class="link-topo-aside-box-btn tc r sm cp b"
-            @click="setMode(false)"
-        >{{ this.$t('client') }}</span>
-        <span
-            v-if="stateTopo.detectPoints.indexOf('SERVER') !== -1"
-            :class="{'active':stateTopo.mode}"
-            class="link-topo-aside-box-btn tc r sm cp b"
-            @click="setMode(true)"
-        >{{ this.$t('server') }}</span>
-      </div>
-      <div v-if="showInfo">
-        <TopoChart
-            v-if="stateTopo.getResponseTimeTrend.length"
-            :data="stateTopo.getResponseTimeTrend"
+        <div class="mb-20">
+          <span class="b dib mr-20">{{ $t('serviceDetail') }}</span>
+        </div>
+        <div class="mb-10">
+          <span class="label grey">{{ $t('name') }}</span>
+          <span class="content">{{ stateTopo.currentNode.name }}</span>
+        </div>
+        <div class="mb-10">
+          <span class="label grey">{{ $t('type') }}</span>
+          <span class="content">{{ stateTopo.currentNode.type }}</span>
+        </div>
+        <div>
+          <TopoChart
+            v-if="rocketDashboard.serviceApdexScore.ApdexScore.length"
+            :data="rocketDashboard.serviceApdexScore.ApdexScore"
             :intervalTime="intervalTime"
-            :title="$t('avgResponseTime')"
-            unit="ms"
-        />
-        <TopoChart
-            v-if="stateTopo.getThroughputTrend.length"
-            :data="stateTopo.getThroughputTrend"
-            :intervalTime="intervalTime"
-            :title="$t('avgThroughput')"
-            unit="cpm"
-        />
-        <TopoChart
-            v-if="stateTopo.getSLATrend.length"
-            :data="stateTopo.getSLATrend"
+            title="Service ApdexScore"
+            unit=""
+          />
+          <TopoChart
+            v-if="rocketDashboard.serviceSLA.SLA.length"
+            :data="rocketDashboard.serviceSLA.SLA"
             :intervalTime="intervalTime"
             :precent="true"
-            :title="$t('avgSLA')"
+            title="Service SLA"
             unit="%"
-        />
-        <ChartResponse
-            v-if="stateTopo.p50.length"
-            :data="stateTopo"
-            :intervalTime="intervalTime"
-            :title="$t('percentResponse')"
-        />
+          />
+        </div>
       </div>
+      <TopoDetectPoint />
     </div>
-    <el-drawer
-        v-if="stateTopo.showAlarmDialog"
-        custom-class="performance-metrics-window"
-        size="75%"
-        destroy-on-close
-        :visible.sync="stateTopo.showAlarmDialog"
-    >
-      <alarm-containers :style="`height: ${drawerMainBodyHeight}`"
-                        :alarmScope="{label: 'Service', key: 'Service'}"
-                        inTopo
-                        :keyword="stateTopo.honeycombNode.name"
-      ></alarm-containers>
-    </el-drawer>
-    <el-drawer
-        custom-class="performance-metrics-window"
-        v-if="stateTopo.showTraceDialog"
-        size="75%"
-        destroy-on-close
-        :visible.sync="stateTopo.showTraceDialog"
-    >
-      <trace-containers :style="`height: ${drawerMainBodyHeight}`"
-                        :service="{label: stateTopo.honeycombNode.name, key: stateTopo.honeycombNode.id}"
-                        inTopo
-      ></trace-containers>
-    </el-drawer>
-    <instances-survey-window
-        v-if="stateTopo.showInstancesDialog"
-        :is-show.sync="stateTopo.showInstancesDialog"
-        :instances="stateDashboardOption.instances"
-    ></instances-survey-window>
-    <endpoint-survey-window
-        v-if="stateTopo.showEndpointDialog"
-        :is-show.sync="stateTopo.showEndpointDialog"
-        :endpoints="stateDashboardOption.endpoints"
-    ></endpoint-survey-window>
   </aside>
 </template>
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
-import topo, { State as topoState} from '@/store/modules/topology';
-import { State, Mutation, Getter, Action } from 'vuex-class';
-import TopoChart from './topo-chart.vue';
-import TopoService from './topo-services.vue';
-import ChartResponse from './topo-response.vue';
-import Radial from './radial.vue';
-import AlarmContainers from '@/views/containers/alarm.vue';
-import TraceContainers from '@/views/containers/trace.vue';
-import InstancesSurveyWindow from '@/views/containers/instances-survey-window.vue';
-import EndpointSurveyWindow from '@/views/containers/endpoint-survey-window.vue';
-import { initState } from '@/store/modules/dashboard/modules/dashboard-data-layout';
+  import { initState } from '@/store/modules/dashboard/modules/dashboard-data-layout';
+  import topo, { State as topoState } from '@/store/modules/topology';
+  import { Component, Vue, Watch } from 'vue-property-decorator';
+  import { Action, Getter, Mutation, State } from 'vuex-class';
+  import Radial from './radial.vue';
+  import TopoChart from './topo-chart.vue';
+  import TopoService from './topo-services.vue';
+  import TopoDetectPoint from './topo-detect-point.vue';
 
-@Component({components: {TopoChart, TopoService, ChartResponse, Radial, AlarmContainers,
-    TraceContainers, InstancesSurveyWindow, EndpointSurveyWindow}})
-export default class TopoAside extends Vue {
-  @State('rocketTopo') private stateTopo!: topoState;
-  @State('rocketOption') private stateDashboardOption!: any;
-  @Getter('intervalTime') private intervalTime: any;
-  @Getter('durationTime') private durationTime: any;
-  @Action('rocketTopo/GET_TOPO') private GET_TOPO: any;
-  @Action('rocketTopo/CLEAR_TOPO') private CLEAR_TOPO: any;
-  @Mutation('rocketTopo/SET_MODE_STATUS') private SET_MODE_STATUS: any;
-  @Action('rocketTopo/CLEAR_TOPO_INFO') private CLEAR_TOPO_INFO: any;
-  @Mutation('SET_COMPS_TREE') private SET_COMPS_TREE: any;
+  @Component({
+    components: {
+      TopoChart,
+      TopoService,
+      Radial,
+      TopoDetectPoint,
+    },
+  })
+  export default class TopoAside extends Vue {
+    @State('rocketTopo') private stateTopo!: topoState;
+    @State('rocketDashboard') private rocketDashboard: any;
+    @Getter('intervalTime') private intervalTime: any;
+    @Getter('durationTime') private durationTime: any;
+    @Action('SELECT_SERVICE') private SELECT_SERVICE: any;
+    @Action('rocketTopo/GET_TOPO') private GET_TOPO: any;
+    @Action('rocketTopo/CLEAR_TOPO') private CLEAR_TOPO: any;
+    @Action('rocketTopo/CLEAR_TOPO_INFO') private CLEAR_TOPO_INFO: any;
+    @Mutation('SET_COMPS_TREE') private SET_COMPS_TREE: any;
+    @Mutation('SET_EVENTS') private SET_EVENTS: any;
+    @Mutation('rocketTopo/SET_MODE_STATUS') private SET_MODE_STATUS: any;
+    private dialogTopoVisible = false;
+    private drawerMainBodyHeight = '100%';
+    private initState = initState;
+    private radioStatus: boolean = false;
+    private show: boolean = true;
 
-  private drawerMainBodyHeight = '100%';
-  private initState = initState;
-  private radioStatus: boolean = false;
-  private show: boolean = true;
-  private showInfo: boolean = false;
-  private isMini: boolean = true;
-  private showInfoCount: number = 0;
+    private get showServerInfo() {
+      return (
+        this.stateTopo.currentNode.name && this.stateTopo.currentNode.isReal
+      );
+    }
 
-  private resize() {
-    this.drawerMainBodyHeight = `${document.body.clientHeight - 50}px`;
-  }
+    private resize() {
+      this.drawerMainBodyHeight = `${document.body.clientHeight - 50}px`;
+    }
 
-  private beforeCreate() {
-    this.$store.registerModule('rocketTopo', topo);
-  }
+    private created() {
+      this.SET_EVENTS([]);
+      this.SET_COMPS_TREE(this.initState.tree);
+    }
 
-  private async created() {
-    this.getTopo();
-    this.SET_COMPS_TREE(this.initState.tree);
-  }
+    private mounted() {
+      this.resize();
+      window.addEventListener('resize', this.resize);
+    }
 
-  private mounted() {
-    this.resize();
-    window.addEventListener('resize', this.resize);
-  }
+    private getTopo() {
+      this.GET_TOPO({ duration: this.durationTime });
+    }
 
-  private getTopo() {
-    this.GET_TOPO({ duration: this.durationTime });
-  }
+    private beforeDestroy() {
+      window.removeEventListener('resize', this.resize);
+      this.CLEAR_TOPO_INFO();
+      this.CLEAR_TOPO();
+    }
 
-  private beforeDestroy() {
-    window.removeEventListener('resize', this.resize);
-    // this.CLEAR_TOPO_INFO();报错暂时去掉
-    // this.CLEAR_TOPO();报错暂时去掉
-    // this.$store.unregisterModule('rocketTopo');报错暂时去掉
-  }
-
-  get types() {
-    const result: any = {};
-    this.stateTopo.nodes.forEach((i: any) => {
-      if ( !i.type || i.type === 'N/A') {
-        const portName = i.name.lastIndexOf(':');
-        const port = i.name.substring(portName + 1, i.name.length);
-        if ( port.indexOf('330') !== -1 ) {
-           i.type = 'Mysql';
+    get types() {
+      const result: any = {};
+      this.stateTopo.nodes.forEach((i: any) => {
+        if (result[i.type]) {
+          result[i.type] += 1;
+        } else {
+          result[i.type] = 1;
         }
-      }
-      if (result[i.type]) {
-        result[i.type] += 1;
-      } else {
-        result[i.type] = 1;
-      }
-    });
-    return result;
-  }
+      });
+      return result;
+    }
 
-  @Watch('durationTime')
-  private watchDurationTime() {
-    this.getTopo();
-  }
+    @Watch('durationTime')
+    private watchDurationTime() {
+      this.getTopo();
+    }
 
-  @Watch('stateTopo.selectedCallId')
-  private watchDetectPointNodeId(newValue: string) {
-    if (newValue) {
-      this.showInfo = true;
-    } else {
-      this.showInfo = false;
-      this.isMini = true;
+    private showRadial() {
+      this.radioStatus = !this.radioStatus;
     }
   }
-  private showRadial(status: boolean) {
-     this.radioStatus = status;
-  }
-  private setMode(mode: boolean) {
-    this.SET_MODE_STATUS(mode);
-    this.stateTopo.callback();
-  }
-  private setShowInfo() {
-    this.showInfo = false;
-    this.showInfoCount = 1;
-    this.isMini = !this.isMini;
-    setTimeout(() => {
-      this.showInfo = true;
-    }, 550);
-  }
-}
 </script>
 <style lang="scss">
-.link-topo-aside{
-  width: 280px;
-  position: absolute;
-  z-index: 2;
-  left: 20px;
-  top: 30px;
-  .to-apm{
-    padding-top: 10px;
-    border-top: 1px solid #d8d8d866;
+  .link-topo-aside {
+    width: 280px;
+    position: absolute;
+    z-index: 2;
+    left: 20px;
+    top: 7px;
+
+    .to-apm {
+      padding-top: 10px;
+      border-top: 1px solid #d8d8d866;
+    }
   }
-}
-.link-topo-aside-box-btn{
-  color: #626977;
-  border: 1px solid;
-  padding: 0px 3px;
-  width: 45px;
-  display: inline-block;
-  &.active{
-    color: #448dfe;
+
+  .link-topo-aside-btn {
+    display: block;
+    background: #252a2f9a;
+    color: #ddd;
+    border-radius: 4px 4px 4px 4px;
+    text-align: center;
+    padding: 10px;
+    z-index: 101;
   }
-}
-.link-topo-aside-btn{
-  display:block;
-  background: #252a2f9a;
-  color: #ddd;
-  border-radius: 4px 4px 4px 4px;
-  text-align: center;
-  padding: 10px;
-  z-index: 101;
-}
-.link-topo-aside-box{
-  border-radius: 4px;
-  position: absolute;
-  width: 280px;
-  z-index: 101;
-  color: #ddd;
-  background-color: #333;
-  padding: 15px 20px 10px;
-  .label{
-    display: inline-block;
-    width: 40%;
-  }
-  .content{
-    vertical-align: top;
-    display: inline-block;
-    width: 60%;
-  }
-  .circle{
-    width: 8px;
-    height: 8px;
+
+  .link-topo-aside-box {
     border-radius: 4px;
-    background-color: #EE5B5B;
-    margin-top: 6px;
-  }
-}
-.link-topo-aside-box {
-  p {
-    margin-block-start: auto !important;
-    margin-block-end: auto !important;
-  }
-}
-.link-topo-aside-box-min {
-  width: 280px;
-  animation: 0.5s linkTopoAsideBoxMin 1 running;
-}
-.link-topo-aside-box-max {
-  width: 60%;
-  animation: 0.5s linkTopoAsideBoxMax 1 running;
-}
-
-.performance-metrics-window {
-  .el-drawer__header {
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    color: #72767b;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    margin-bottom: 22px;
-    padding: unset;
-  }
-}
-
-@keyframes linkTopoAsideBoxMax {
-  from {
+    position: absolute;
     width: 280px;
+    z-index: 101;
+    color: #ddd;
+    background-color: #2b3037;
+    padding: 15px 20px 10px;
+
+    .label {
+      display: inline-block;
+      width: 40%;
+    }
+
+    .content {
+      vertical-align: top;
+      display: inline-block;
+      width: 60%;
+    }
+
+    .circle {
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background-color: #ee5b5b;
+      margin-top: 6px;
+    }
   }
-  to {
-    width: 60%;
+
+  .link-topo-aside-box {
+    p {
+      margin-block-start: auto !important;
+      margin-block-end: auto !important;
+    }
   }
-}
-@keyframes linkTopoAsideBoxMin {
-  from {
-    width: 60%;
-  }
-  to {
+
+  .link-topo-aside-box-min {
     width: 280px;
+    animation: 0.5s linkTopoAsideBoxMin 1 running;
   }
-}
+
+  .link-topo-aside-box-max {
+    width: 60%;
+    animation: 0.5s linkTopoAsideBoxMax 1 running;
+  }
+
+  @keyframes linkTopoAsideBoxMax {
+    from {
+      width: 280px;
+    }
+    to {
+      width: 60%;
+    }
+  }
+
+  @keyframes linkTopoAsideBoxMin {
+    from {
+      width: 60%;
+    }
+    to {
+      width: 280px;
+    }
+  }
 </style>

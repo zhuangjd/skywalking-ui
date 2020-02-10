@@ -18,8 +18,8 @@
 import noty from './noty';
 import RkHeader from './rk-header.vue';
 import RkFooter from './rk-footer.vue';
-import RkProgress from './rk-progress.vue';
 import RkFooterTime from './rk-footer-time.vue';
+import RkProgress from './rk-progress.vue';
 import RkPage from './rk-page.vue';
 import RkDate from './rk-date.vue';
 import RkPanel from './rk-panel.vue';
@@ -33,14 +33,29 @@ import RkButton from './rk-button.vue';
 import RkIcon from './rk-icon.vue';
 
 const components: any = {
-  RkHeader, RkFooter, RkProgress, RkDate, RkPanel, RkEcharts, RkPage, RkSidebox, RkFooterTime, RkSelect,
-  RkPopper, RkDropdown, RkBack, RkButton, RkIcon,
+  RkHeader,
+  RkFooter,
+  RkProgress,
+  RkDate,
+  RkPanel,
+  RkEcharts,
+  RkPage,
+  RkSidebox,
+  RkFooterTime,
+  RkSelect,
+  RkPopper,
+  RkDropdown,
+  RkBack,
+  RkButton,
+  RkIcon,
 };
 
 const componentsName: string[] = Object.keys(components);
-export default {install: (vue: any) => {
-  componentsName.forEach((i) => {
-    vue.component(i, components[i]);
-  });
-  vue.use(noty);
-}};
+export default {
+  install: (vue: any) => {
+    componentsName.forEach((i) => {
+      vue.component(i, components[i]);
+    });
+    vue.use(noty);
+  },
+};

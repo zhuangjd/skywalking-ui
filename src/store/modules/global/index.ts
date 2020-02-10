@@ -29,34 +29,34 @@ const dateFormat = (date: Date, step: string): string => {
   const monthTemp = date.getMonth() + 1;
   let month: string = `${monthTemp}`;
   if (monthTemp < 10) {
-     month = `0${monthTemp}`;
+    month = `0${monthTemp}`;
   }
   if (step === 'MONTH') {
-     return `${year}-${month}`;
+    return `${year}-${month}`;
   }
   const dayTemp = date.getDate();
   let day: string = `${dayTemp}`;
   if (dayTemp < 10) {
-     day = `0${dayTemp}`;
+    day = `0${dayTemp}`;
   }
   if (step === 'DAY') {
-     return `${year}-${month}-${day}`;
+    return `${year}-${month}-${day}`;
   }
   const hourTemp = date.getHours();
   let hour: string = `${hourTemp}`;
   if (hourTemp < 10) {
-     hour = `0${hourTemp}`;
+    hour = `0${hourTemp}`;
   }
   if (step === 'HOUR') {
-     return `${year}-${month}-${day} ${hour}`;
+    return `${year}-${month}-${day} ${hour}`;
   }
   const minuteTemp = date.getMinutes();
   let minute: string = `${minuteTemp}`;
   if (minuteTemp < 10) {
-     minute = `0${minuteTemp}`;
+    minute = `0${minuteTemp}`;
   }
   if (step === 'MINUTE') {
-     return `${year}-${month}-${day} ${hour}${minute}`;
+    return `${year}-${month}-${day} ${hour}${minute}`;
   }
   return '';
 };
@@ -65,43 +65,37 @@ const dateFormatTime = (date: Date, step: string): string => {
   const monthTemp = date.getMonth() + 1;
   let month: string = `${monthTemp}`;
   if (monthTemp < 10) {
-     month = `0${monthTemp}`;
+    month = `0${monthTemp}`;
   }
   if (step === 'MONTH') {
-     return `${year}-${month}`;
+    return `${year}-${month}`;
   }
   const dayTemp = date.getDate();
   let day: string = `${dayTemp}`;
   if (dayTemp < 10) {
-     day = `0${dayTemp}`;
+    day = `0${dayTemp}`;
   }
   if (step === 'DAY') {
-     return `${month}-${day}`;
+    return `${month}-${day}`;
   }
   const hourTemp = date.getHours();
   let hour: string = `${hourTemp}`;
   if (hourTemp < 10) {
-      hour = `0${hourTemp}`;
+    hour = `0${hourTemp}`;
   }
   if (step === 'HOUR') {
-      return `${month}-${day} ${hour}`;
+    return `${month}-${day} ${hour}`;
   }
   const minuteTemp = date.getMinutes();
   let minute: string = `${minuteTemp}`;
   if (minuteTemp < 10) {
-     minute = `0${minuteTemp}`;
+    minute = `0${minuteTemp}`;
   }
   if (step === 'MINUTE') {
-     return `${hour}:${minute}\n${month}-${day}`;
+    return `${hour}:${minute}\n${month}-${day}`;
   }
   return '';
 };
-
-let utc = window.localStorage.getItem('utc');
-if (!utc) {
-  utc = (-(new Date().getTimezoneOffset() / 60)).toString();
-  window.localStorage.setItem('utc', utc);
-}
 
 export interface State {
   durationRow: Duration;
@@ -118,14 +112,19 @@ const initState: State = {
   chartStack: [],
   edit: false,
   lock: true,
-  utc: window.localStorage.getItem('utc') || -(new Date().getTimezoneOffset() / 60),
+  utc:
+    window.localStorage.getItem('utc') ||
+    -(new Date().getTimezoneOffset() / 60),
 };
 
 // getters
 const getters = {
   duration(state: State): Duration {
     return {
-      start: getLocalTime(parseInt(state.utc + '', 10), state.durationRow.start),
+      start: getLocalTime(
+        parseInt(state.utc + '', 10),
+        state.durationRow.start,
+      ),
       end: getLocalTime(parseInt(state.utc + '', 10), state.durationRow.end),
       step: state.durationRow.step,
     };
@@ -143,17 +142,25 @@ const getters = {
         interval = 86400000;
         break;
       case 'MONTH':
-        interval = (getter.duration.end.getTime() - getter.duration.start.getTime())
-          / (getter.duration.end.getFullYear() * 12 + getter.duration.end.getMonth()
-            - getter.duration.start.getFullYear() * 12 - getter.duration.start.getMonth());
+        interval =
+          (getter.duration.end.getTime() - getter.duration.start.getTime()) /
+          (getter.duration.end.getFullYear() * 12 +
+            getter.duration.end.getMonth() -
+            getter.duration.start.getFullYear() * 12 -
+            getter.duration.start.getMonth());
         break;
     }
-    const utcSpace = (parseInt(state.utc + '', 10) + new Date().getTimezoneOffset() / 60) * 3600000;
+    const utcSpace =
+      (parseInt(state.utc + '', 10) + new Date().getTimezoneOffset() / 60) *
+      3600000;
     const startUnix: number = getter.duration.start.getTime();
     const endUnix: number = getter.duration.end.getTime();
     const timeIntervals: string[] = [];
     for (let i = 0; i <= endUnix - startUnix; i += interval) {
-      const temp: string = dateFormatTime(new Date(startUnix + i - utcSpace), getter.duration.step);
+      const temp: string = dateFormatTime(
+        new Date(startUnix + i - utcSpace),
+        getter.duration.step,
+      );
       timeIntervals.push(temp);
     }
     return timeIntervals;
@@ -188,9 +195,13 @@ const mutations: MutationTree<State> = {
   },
   [types.RUN_EVENTS](state: State): void {
     clearTimeout(timer);
-    timer = setTimeout(() => state.eventStack.forEach((event: any) => {
-       setTimeout(event(), 0);
-    }), 500);
+    timer = setTimeout(
+      () =>
+        state.eventStack.forEach((event: any) => {
+          setTimeout(event(), 0);
+        }),
+      500,
+    );
   },
   [types.SET_EDIT](state: State, status: boolean): void {
     state.edit = status;
@@ -214,7 +225,7 @@ const actions: ActionTree<State, any> = {
   RUN_EVENTS(context: { commit: Commit }): void {
     if (window.axiosCancel.length !== 0) {
       for (const event of window.axiosCancel) {
-         setTimeout(event(), 0);
+        setTimeout(event(), 0);
       }
       window.axiosCancel = [];
     }
