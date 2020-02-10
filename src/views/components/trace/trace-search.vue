@@ -271,7 +271,7 @@ language governing permissions and * limitations under the License. */
       }
     }
 
-    private beforeUpdate() { /*限制只查询指定的服务，参数通过URL传输过来*/
+    private beforeUpdate() { /*闄愬埗鍙煡璇㈡寚瀹氱殑鏈嶅姟锛屽弬鏁伴�氳繃URL浼犺緭杩囨潵*/
         const nodeNameStr = this.$route.query.nodeName;
         if (nodeNameStr) {
             this.rocketTrace.services.filter((i: any) => {

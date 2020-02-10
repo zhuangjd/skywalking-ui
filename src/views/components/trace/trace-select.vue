@@ -84,7 +84,7 @@ specific language governing permissions and * limitations under the License. */
       this.$emit('input', i);
       this.visible = false;
     }
-    public beforeUpdate() { /*限制只显示指定的服务，参数通过URL传输过来*/
+    public beforeUpdate() { /*闄愬埗鍙樉绀烘寚瀹氱殑鏈嶅姟锛屽弬鏁伴�氳繃URL浼犺緭杩囨潵*/
         const nodeNameStr = this.$route.query.nodeName;
         if (nodeNameStr) {
             this.visible = false;

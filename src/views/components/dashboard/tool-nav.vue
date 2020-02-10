@@ -116,7 +116,7 @@ specific language governing permissions and * limitations under the License. */
       this.handleHide();
       this.template = 'nouse';
     }
-    private mounted() { /*限制默认显示Service，参数通过URL传输过来*/
+    private mounted() { /*闄愬埗榛樿鏄剧ずService锛屽弬鏁伴�氳繃URL浼犺緭杩囨潵*/
       let index = 0;
       if (this.$route.query.nodeName) {
           this.rocketComps.tree[this.rocketComps.group].children.filter((i: any) => {
@@ -127,7 +127,7 @@ specific language governing permissions and * limitations under the License. */
           });
       }
     }
-    private updated() { /*限制默认显示Database，参数通过URL传输过来*/
+    private updated() { /*闄愬埗榛樿鏄剧ずDatabase锛屽弬鏁伴�氳繃URL浼犺緭杩囨潵*/
         let index = 0;
         if (this.$route.query.nodeName) {
             this.rocketComps.tree[this.rocketComps.group].children.filter((i: any) => {

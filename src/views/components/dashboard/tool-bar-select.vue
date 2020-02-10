@@ -74,6 +74,7 @@ specific language governing permissions and * limitations under the License. */
     @Prop({ type: Boolean, default: true }) public selectable!: boolean;
     public search: string = '';
     public visible: boolean = false;
+    public isAlert: boolean = true;
     get filterData() {
       return this.data.filter(
         (i: any) =>
@@ -87,7 +88,7 @@ specific language governing permissions and * limitations under the License. */
       this.$emit('onChoose', i);
       this.visible = false;
     }
-    public updated() { /*ÏŞÖÆÖ»ÏÔÊ¾Ö¸¶¨µÄ·şÎñºÍÊµÀı£¬²ÎÊıÍ¨¹ıURL´«Êä¹ıÀ´*/
+    public updated() { /*é™åˆ¶åªæ˜¾ç¤ºæŒ‡å®šçš„æœåŠ¡å’Œå®ä¾‹ï¼Œå‚æ•°é€šè¿‡URLä¼ è¾“è¿‡æ¥*/
       if (this.$route.query.nodeName) {
           this.data.filter((i: any) => {
               if (i.label.indexOf(this.$route.query.nodeName) !== -1) {
@@ -95,7 +96,7 @@ specific language governing permissions and * limitations under the License. */
                   this.visible = false;
               } else {
                   if (i.label.indexOf('-pid:') !== -1 && this.isAlert) {
-                      alert('µ±Ç°Î´²É¼¯µ½½Úµã¡¾' + this.$route.query.nodeName + '¡¿µÄÊı¾İ£¬Çë¼ì²é¼à¿Ø´úÀíÅäÖÃ²¢Ë¢ĞÂµ±Ç°·şÎñ£¡');
+                      alert('å½“å‰æœªé‡‡é›†åˆ°èŠ‚ç‚¹ã€' + this.$route.query.nodeName + 'ã€‘çš„æ•°æ®ï¼Œè¯·æ£€æŸ¥ç›‘æ§ä»£ç†é…ç½®å¹¶åˆ·æ–°å½“å‰æœåŠ¡ï¼');
                       this.isAlert = false;
                   }
               }
