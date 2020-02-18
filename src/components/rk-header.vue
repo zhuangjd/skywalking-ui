@@ -46,6 +46,12 @@ specific language governing permissions and * limitations under the License. */
         </svg>
         <span class="vm hide-xs ml-5">{{ this.$t('comparison') }}</span>
       </router-link>
+      <router-link class="nav-link mr-20" to="/instructions.html" target="_blank">
+        <svg class="icon sm vm">
+          <use xlink:href="#disk"></use>
+        </svg>
+        <span class="vm hide-xs ml-5">使用说明</span>
+      </router-link>
     </div>
     <div class="flex-h">
       <a
@@ -145,7 +151,7 @@ specific language governing permissions and * limitations under the License. */
       height: 22px;
     }
     .rocketbot {
-      padding-top: 33px;
+      padding-top: 28px;
       position: absolute;
       font-size: 11px;
     }
